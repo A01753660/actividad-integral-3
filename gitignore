@@ -1,0 +1,10 @@
+# Artefactos de compilacion
+cmake-build-debug/
+cmake-build-release/
+build/
+*.exe
+*.o
+
+# Configuracion local del IDE
+.idea/
+.vscode/
