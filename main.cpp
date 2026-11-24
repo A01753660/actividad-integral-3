@@ -66,8 +66,10 @@ ostream& operator<<(ostream &os, const ip &address) {
         os << "-";
     } else {
         os << address.o1 << "." << address.o2 << "." << address.o3 << "."
-           << address.o4;}
-    return os;}
+           << address.o4;
+    }
+    return os;
+}
 
 // Escribe un evento en un flujo de salida usando el mismo formato de la
 // bitacora.
@@ -84,7 +86,8 @@ ostream& operator<<(ostream &os, const event &e) {
     os << dateOutput << "," << e.ip_o << "," << e.port_o << ","
        << e.domain_o << "," << e.ip_d << "," << e.port_d << ","
        << e.domain_d;
-    return os;}
+    return os;
+}
 
 // Escribe un par (ip, numero de accesos) en un flujo de salida con el formato de
 //"ip: accesos".
@@ -128,7 +131,8 @@ bool operator<(const ip &ip1, const ip &ip2) {
 // true si los cuatro octetos coinciden, false en cualquier otro caso.
 bool operator==(const ip &ip1, const ip &ip2) {
     return ip1.o1 == ip2.o1 && ip1.o2 == ip2.o2 && ip1.o3 == ip2.o3
-           && ip1.o4 == ip2.o4;}
+           && ip1.o4 == ip2.o4;
+}
 
 // Determina la prioridad relativa de dos pares (ip, numero de accesos). Es el
 // criterio que usan make_heap y pop_heap:el par que esmayor queda al frente del
@@ -142,7 +146,8 @@ bool operator==(const ip &ip1, const ip &ip2) {
 // Retorno:
 //   true si p1 tiene menos prioridad que p2, false en cualquier otro caso.
 bool operator<(const pair<ip, int> &p1, const pair<ip, int> &p2) {
-    if (p1.second != p2.second) {return p1.second < p2.second;}
+    if (p1.second != p2.second) {return p1.second < p2.second;
+    }
     return p2.first < p1.first;
 }
 // Convierte una cadena con formato "a.b.c.d" en una estructura ip.
@@ -155,11 +160,13 @@ bool operator<(const pair<ip, int> &p1, const pair<ip, int> &p2) {
 ip parseIp(const string &text) {
     ip result = {0, 0, 0, 0};
     if (text == "-" || text.empty()) {
-        return result;}
+        return result;
+    }
     istringstream stream(text);
     char dot = ' ';
     stream >> result.o1 >> dot >> result.o2 >> dot >> result.o3 >> dot >> result.o4;
-    return result;}
+    return result;
+}
 // Convierte las cadenas de fecha y hora de la bitacora en una estructura tm.
 // Los parametros:
 //   date: es la cadena con la fecha en formato "dd-mm-aaaa".
@@ -187,7 +194,8 @@ tm parseTimestamp(const string &date, const string &time) {
     timestamp.tm_min = minute;
     timestamp.tm_sec = second;
     timestamp.tm_isdst = -1;
-    return timestamp;}
+    return timestamp;
+}
 
 // Convierte una linea de la bitacora en un evento. El formato que deberia salir es
 // fecha,hora,ip origen,puerto origen,dominio origen,ip destino,puerto destino,
@@ -203,7 +211,8 @@ bool parseEvent(const string &line, event &e) {
     string fields[FIELD_COUNT] = {};
     for (int i = 0; i < FIELD_COUNT; i++) {
         if (!getline(stream, fields[i], ',')) {
-            return false;}
+            return false;
+        }
     }
     // Los archivos con saltos de linea de Windows dejan un retorno de carro al
     // final del ultimo campo, que debe eliminarse para no contaminar el dominio
@@ -234,7 +243,8 @@ bool countAccesses(const string &filename, vector<pair<ip, int>> &counts) {
     ifstream file(filename);
     if (!file.is_open()) {
         cerr << "Error: no se pudo abrir el archivo '" << filename << "'\n";
-        return false;}
+        return false;
+    }
 
     string line = "";
     while (getline(file, line)) {
@@ -243,7 +253,8 @@ bool countAccesses(const string &filename, vector<pair<ip, int>> &counts) {
             if (!counts.empty() && counts.back().first == e.ip_d) {
                 counts.back().second++;
             } else {
-                counts.push_back(pair<ip, int>{e.ip_d, 1});}
+                counts.push_back(pair<ip, int>{e.ip_d, 1});
+            }
         }
     }
 
@@ -273,7 +284,9 @@ void printTop(vector<pair<ip, int>> &heap, int n) {
     for (int i = 1; i <= n; i++) {
         cout << i << ". " << heap.front() << "\n";
         pop_heap(heap.begin(), heap.end());
-        heap.pop_back();}}
+        heap.pop_back();
+    }
+}
 
 // Programa principal. Cuenta los accesos a cada ip destino, convierte los
 // conteos en un heap y despliega las N ip con mas accesos.
@@ -301,8 +314,10 @@ int main() {
     int total = v.size();
     if (n > total) {
         cout << "Solo hay " << total << " ip destino; se despliegan todas.\n";
-        n = total;}
+        n = total;
+    }
 
     cout << "\nIp destino con mas accesos (" << n << "):\n";
     printTop(v, n);
-    return 0;}
+    return 0;
+}
